@@ -9,6 +9,7 @@ import { Separator } from '@/components/ui/separator';
 import { AlertCircle, Store } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import CommentForm from '@/components/shared/CommentForm'; // Import the new form
 
 interface ProductPageParams {
   id: string;
@@ -111,6 +112,17 @@ export default async function ProductPage({ params }: { params: ProductPageParam
           </CardContent>
         </Card>
       )}
+
+      {/* Add Comment Section */}
+      <Card className="mt-12">
+        <CardHeader>
+          <CardTitle>نظر خود را ثبت کنید</CardTitle>
+          <CardDescription>تجربه خود را در مورد این کالا با دیگران به اشتراک بگذارید.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <CommentForm productId={product.id} />
+        </CardContent>
+      </Card>
     </div>
   );
 }

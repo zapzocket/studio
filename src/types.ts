@@ -1,4 +1,22 @@
+
 import type { LucideIcon } from 'lucide-react';
+
+export interface Shop {
+  id: string;
+  name: string;
+  logo?: string;
+  logoHint?: string;
+}
+
+export interface Comment {
+  id: string;
+  user: string;
+  avatar?: string;
+  avatarHint?: string;
+  text: string;
+  rating: number; // User's rating for the product in this comment
+  date: string;
+}
 
 export interface Product {
   id: string;
@@ -6,7 +24,14 @@ export interface Product {
   image: string;
   imageHint?: string;
   price: string;
+  description?: string;
+  category?: string;
+  rating?: number; // Overall product rating
+  comments?: Comment[];
+  shop?: Shop;
   isFavorite?: boolean;
+  // Add other relevant fields from existing mock data if needed for consistency
+  // For example, if category was used by ProductCard, ensure it's here.
 }
 
 export interface Article {

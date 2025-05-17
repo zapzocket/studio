@@ -1,0 +1,116 @@
+
+import { detailedMockProducts } from '@/lib/mock-data';
+import type { Product, Comment } from '@/types';
+import Image from 'next/image';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import StarRating from '@/components/shared/StarRating';
+import { Separator } from '@/components/ui/separator';
+import { AlertCircle, Store } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+
+interface ProductPageParams {
+  id: string;
+}
+
+// Helper function to get product (simulates API call)
+async function getProductById(id: string): Promise<Product | undefined> {
+  return detailedMockProducts.find(p => p.id === id);
+}
+
+export default async function ProductPage({ params }: { params: ProductPageParams }) {
+  const product = await getProductById(params.id);
+
+  if (!product) {
+    return (
+      <div className="container mx-auto px-4 py-12 text-center">
+        <AlertCircle className="mx-auto h-16 w-16 text-destructive mb-4" />
+        <h1 className="text-3xl font-bold text-destructive mb-2">کالا یافت نشد</h1>
+        <p className="text-muted-foreground mb-6">متاسفانه کالایی با این شناسه پیدا نشد.</p>
+        <Button asChild>
+          <Link href="/products">بازگشت به لیست محصولات</Link>
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
+        {/* Product Image */}
+        <Card className="overflow-hidden">
+          <div className="relative w-full aspect-square">
+            <Image
+              src={product.image}
+              alt={product.name}
+              layout="fill"
+              objectFit="contain" // Use contain to see the whole image
+              data-ai-hint={product.imageHint || 'product image'}
+              className="bg-card"
+            />
+          </div>
+        </Card>
+
+        {/* Product Details */}
+        <div className="flex flex-col space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-3xl font-bold">{product.name}</CardTitle>
+              {product.shop && (
+                <div className="flex items-center text-sm text-muted-foreground pt-2">
+                  <Store size={16} className="ms-2" />
+                  <span>فروشنده: {product.shop.name}</span>
+                </div>
+              )}
+            </CardHeader>
+            <CardContent>
+              {product.rating && product.rating > 0 && (
+                <div className="mb-4">
+                  <StarRating rating={product.rating} size={24} />
+                  <span className="text-sm text-muted-foreground me-2">({product.comments?.length || 0} نظر)</span>
+                </div>
+              )}
+              <p className="text-3xl font-semibold text-primary mb-4">{product.price} تومان</p>
+              {product.description && (
+                <p className="text-foreground leading-relaxed">{product.description}</p>
+              )}
+            </CardContent>
+            <CardFooter>
+              <Button size="lg" className="w-full">افزودن به سبد خرید</Button>
+            </CardFooter>
+          </Card>
+        </div>
+      </div>
+
+      {/* Comments Section */}
+      {product.comments && product.comments.length > 0 && (
+        <Card className="mt-12">
+          <CardHeader>
+            <CardTitle>نظرات کاربران ({product.comments.length})</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {product.comments.map((comment: Comment) => (
+              <div key={comment.id} className="pb-6 border-b last:border-b-0">
+                <div className="flex items-start space-x-3 rtl:space-x-reverse">
+                  <Avatar className="h-10 w-10">
+                    <AvatarImage src={comment.avatar} alt={comment.user} data-ai-hint={comment.avatarHint || "user avatar"}/>
+                    <AvatarFallback>{comment.user.substring(0, 1)}</AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1">
+                    <div className="flex justify-between items-center">
+                      <p className="font-semibold text-foreground">{comment.user}</p>
+                      <span className="text-xs text-muted-foreground">{comment.date}</span>
+                    </div>
+                    {comment.rating > 0 && <StarRating rating={comment.rating} size={16} className="mt-1 mb-2" />}
+                    <p className="text-sm text-foreground leading-normal">{comment.text}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  );
+}

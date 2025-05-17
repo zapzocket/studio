@@ -4,33 +4,33 @@
 
 @layer base {
   :root {
-    --background: 208 100% 97%; /* Very Light Blue #F0F8FF */
-    --foreground: 215 25% 27%; /* Dark Slate Blue for text */
+    --background: 32 100% 96%; /* Very Light Peach: #FFEFE7 */
+    --foreground: 20 10% 25%; /* Dark Gray for text: #453F3C */
     
-    --card: 0 0% 100%; /* White */
-    --card-foreground: 215 25% 27%; /* Dark Slate Blue */
+    --card: 0 0% 100%; /* White for cards */
+    --card-foreground: 20 10% 25%; /* Dark Gray for text on cards */
     
-    --popover: 0 0% 100%; /* White */
-    --popover-foreground: 215 25% 27%; /* Dark Slate Blue */
+    --popover: 0 0% 100%; /* White for popovers */
+    --popover-foreground: 20 10% 25%; /* Dark Gray for text on popovers */
     
-    --primary: 207 88% 68%; /* Gentle Muted Blue #64B5F6 */
+    --primary: 24 88% 60%; /* Vibrant Orange: #F57F30 */
     --primary-foreground: 0 0% 100%; /* White, for good contrast on primary */
     
-    --secondary: 210 40% 90%; /* Light gray-blue, slightly darker for better contrast as secondary button */
-    --secondary-foreground: 215 25% 27%; /* Dark Slate Blue text on secondary */
+    --secondary: 32 60% 90%; /* Light Peachy Gray: #F2E8E2 */
+    --secondary-foreground: 24 70% 35%; /* Darker orange for text on this secondary */
     
-    --muted: 210 40% 96.1%; /* Very light gray-blue for muted backgrounds */
-    --muted-foreground: 215 20% 55%; /* Medium Slate Blue for muted text */
+    --muted: 30 25% 94%; /* Very light gray-peach for muted backgrounds: #F5F1EF */
+    --muted-foreground: 20 10% 45%; /* Medium Slate Gray for muted text: #7F7976 */
     
-    --accent: 125 38% 75%; /* Soft Green #A5D6A7 */
-    --accent-foreground: 120 30% 20%; /* Dark Green for text on accent */
+    --accent: 24 88% 60%; /* Same as Primary Orange for general accents */
+    --accent-foreground: 0 0% 100%; /* White for text on accent */
     
-    --destructive: 0 72% 51%; /* Adjusted destructive color */
+    --destructive: 0 72% 51%; /* Standard red: #DB2727 */
     --destructive-foreground: 0 0% 100%; /* White */
     
-    --border: 214 32% 88%; /* Light border color, slightly darker */
-    --input: 214 32% 88%; /* Input border */
-    --ring: 207 88% 60%; /* Ring color based on primary */
+    --border: 30 20% 88%; /* Light peachy-gray border: #E8E2DE */
+    --input: 30 20% 88%; /* Input border */
+    --ring: 24 88% 55%; /* Ring color based on primary (orange) #F47621 */
     
     --radius: 0.5rem;
 
@@ -52,34 +52,35 @@
   }
 
   .dark {
-    --background: 215 28% 17%; /* Dark Blue-Gray */
-    --foreground: 210 40% 98%; /* Light Gray */
+    --background: 25 15% 10%; /* Very Dark Warm Gray/Brown: #1F1A17 */
+    --foreground: 30 60% 92%; /* Light Peach/Off-white: #F2E8E2 */
     
-    --card: 215 28% 12%; /* Darker Card Background */
-    --card-foreground: 210 40% 98%;
+    --card: 20 10% 8%;   /* Even Darker Warm Gray/Brown for cards: #171412 */
+    --card-foreground: 30 60% 92%; /* Light Peach/Off-white */
     
-    --popover: 215 28% 12%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 20 10% 8%; /* Even Darker Warm Gray/Brown */
+    --popover-foreground: 30 60% 92%; /* Light Peach/Off-white */
     
-    --primary: 207 88% 68%; /* Gentle Muted Blue #64B5F6 */
-    --primary-foreground: 215 28% 17%; /* Dark Blue-Gray text on primary */
+    --primary: 24 85% 65%; /* Orange, slightly lighter for dark mode: #F7924A */
+    --primary-foreground: 24 30% 10%; /* Very dark orange/brown for contrast on primary: #261A0F */
     
-    --secondary: 217 33% 27%; /* Darker Blue-Gray */
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 25 12% 18%; /* Darker warm secondary: #332D29 */
+    --secondary-foreground: 30 50% 80%; /* Lighter peachy text: #E3D4CC */
     
-    --muted: 217 33% 22%; /* Muted Dark Blue-Gray */
-    --muted-foreground: 215 20% 65%; /* Lighter Muted Text */
+    --muted: 25 10% 14%;   /* Muted Dark Warm Gray/Brown: #292522 */
+    --muted-foreground: 30 40% 70%; /* Lighter Muted Peachy Text: #C7BDB6 */
     
-    --accent: 125 38% 75%; /* Soft Green #A5D6A7 */
-    --accent-foreground: 120 30% 15%; /* Very Dark Green text on accent */
+    --accent: 24 85% 65%; /* Orange */
+    --accent-foreground: 24 30% 10%; /* Very dark orange/brown */
     
-    --destructive: 0 63% 30%; /* Darker Destructive */
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 65% 55%; /* Darker Destructive Red: #D13B3B */
+    --destructive-foreground: 0 0% 98%; /* Off-white */
     
-    --border: 217 33% 27%; /* Border for dark mode */
-    --input: 217 33% 27%; /* Input for dark mode */
-    --ring: 207 88% 55%; /* Ring for dark mode */
+    --border: 25 10% 20%; /* Border for dark mode (Dark Warm Gray): #3B3430 */
+    --input: 25 10% 20%;  /* Input for dark mode (Dark Warm Gray) */
+    --ring: 24 85% 50%; /* Ring for dark mode (Orange) #D1681A */
 
+    /* Keeping chart and sidebar variables from original, can be themed later if needed */
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;

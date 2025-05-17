@@ -2,7 +2,7 @@
 import { detailedMockProducts } from '@/lib/mock-data';
 import type { Product, Comment } from '@/types';
 import Image from 'next/image';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import StarRating from '@/components/shared/StarRating';
 import { Separator } from '@/components/ui/separator';

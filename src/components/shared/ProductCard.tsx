@@ -52,7 +52,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
   return (
     <Card className="product-card rounded-xl overflow-hidden shadow-sm border-border transition duration-300 flex flex-col h-full">
       <CardHeader className="p-0">
-        <div className="relative w-full h-48">
+        <div className="relative w-full h-40 sm:h-48">
           <Image 
             src={product.image} 
             alt={product.name} 
@@ -63,30 +63,30 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
           <Button 
             variant="ghost" 
             size="icon" 
-            className="absolute top-3 start-3 text-muted-foreground hover:text-destructive bg-card/70 hover:bg-card"
+            className="absolute top-2 start-2 sm:top-3 sm:start-3 text-muted-foreground hover:text-destructive bg-card/70 hover:bg-card p-1 h-8 w-8 sm:h-auto sm:w-auto"
             onClick={toggleFavorite}
             aria-label={isFavorite ? "حذف از علاقه‌مندی‌ها" : "افزودن به علاقه‌مندی‌ها"}
           >
-            <Heart size={20} fill={isFavorite ? 'hsl(var(--destructive))' : 'none'} className={isFavorite ? 'text-destructive' : ''} />
+            <Heart size={18} sm:size={20} fill={isFavorite ? 'hsl(var(--destructive))' : 'none'} className={isFavorite ? 'text-destructive' : ''} />
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="p-4 flex-grow">
+      <CardContent className="p-3 sm:p-4 flex-grow">
         {translatedCategory && (
           <Badge variant="outline" className="mb-2 text-xs">
             {translatedCategory}
           </Badge>
         )}
-        <CardTitle className="text-md font-bold mb-2 leading-tight">
+        <CardTitle className="text-sm sm:text-base font-bold mb-1 sm:mb-2 leading-tight">
           <Link href={`/products/${product.id}`} className="hover:text-primary">{product.name}</Link>
         </CardTitle>
       </CardContent>
-      <CardFooter className="p-4 flex justify-between items-center">
-        <span className="font-bold text-primary text-lg">{product.price} تومان</span>
+      <CardFooter className="p-3 sm:p-4 flex flex-col items-start gap-2 sm:flex-row sm:justify-between sm:items-center">
+        <span className="font-bold text-primary text-sm sm:text-base md:text-lg">{product.price} تومان</span>
         <Button 
           variant="outline" 
           size="sm"
-          className="border-primary text-primary hover:bg-primary hover:text-primary-foreground transition duration-300"
+          className="border-primary text-primary hover:bg-primary hover:text-primary-foreground transition duration-300 w-full sm:w-auto text-xs sm:text-sm"
           onClick={handleAddToCartClick}
         >
           افزودن به سبد

@@ -1,6 +1,10 @@
+
+'use client';
+
 import Link from 'next/link';
 import { Dog, Cat, Bird, Rabbit } from 'lucide-react'; // Rabbit for Jונדگان (Rodents/Small Pets)
 import type { CategoryInfo } from '@/types';
+import { useIsMobile } from '@/hooks/use-mobile'; // Import the hook
 
 const categories: CategoryInfo[] = [
   { id: 'dog', name: 'سگ', icon: Dog, bgColorClass: 'bg-primary/10', iconColorClass: 'text-primary', href: '/products?category=dog' },
@@ -10,17 +14,20 @@ const categories: CategoryInfo[] = [
 ];
 
 const CategoriesSection = () => {
+  const isMobile = useIsMobile(); // Use the hook
+  const iconSize = isMobile ? 40 : 48; // Determine icon size
+
   return (
-    <section className="py-12 bg-background">
+    <section className="py-10 sm:py-12 bg-background">
       <div className="container mx-auto px-4">
-        <h2 className="text-2xl md:text-3xl font-bold text-center mb-12 text-foreground">دسته‌بندی محصولات</h2>
-        <div className="flex flex-wrap justify-center gap-8">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-8 sm:mb-12 text-foreground">دسته‌بندی محصولات</h2>
+        <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8">
           {categories.map((category) => (
             <Link href={category.href} key={category.id} className="flex flex-col items-center group">
-              <div className={`category-circle ${category.bgColorClass} group-hover:shadow-xl group-hover:scale-105`}>
-                <category.icon size={48} className={category.iconColorClass} />
+              <div className={`category-circle ${category.bgColorClass} group-hover:shadow-xl group-hover:scale-105 w-[100px] h-[100px] sm:w-[120px] sm:h-[120px]`}>
+                <category.icon size={iconSize} className={category.iconColorClass} />
               </div>
-              <span className="mt-4 font-medium text-foreground">{category.name}</span>
+              <span className="mt-3 sm:mt-4 font-medium text-sm sm:text-base text-foreground">{category.name}</span>
             </Link>
           ))}
         </div>

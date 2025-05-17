@@ -36,8 +36,8 @@ export default async function ProductPage({ params }: { params: ProductPageParam
   if (!product) {
     return (
       <div className="container mx-auto px-4 py-12 text-center">
-        <AlertCircle className="mx-auto h-16 w-16 text-destructive mb-4" />
-        <h1 className="text-3xl font-bold text-destructive mb-2">کالا یافت نشد</h1>
+        <AlertCircle className="mx-auto h-12 w-12 sm:h-16 sm:w-16 text-destructive mb-4" />
+        <h1 className="text-2xl sm:text-3xl font-bold text-destructive mb-2">کالا یافت نشد</h1>
         <p className="text-muted-foreground mb-6">متاسفانه کالایی با این شناسه پیدا نشد.</p>
         <Button asChild>
           <Link href="/products">بازگشت به لیست محصولات</Link>
@@ -50,7 +50,7 @@ export default async function ProductPage({ params }: { params: ProductPageParam
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
+      <div className="grid md:grid-cols-2 gap-6 md:gap-8 lg:gap-12">
         {/* Product Image */}
         <Card className="overflow-hidden">
           <div className="relative w-full aspect-square">
@@ -69,7 +69,7 @@ export default async function ProductPage({ params }: { params: ProductPageParam
         <div className="flex flex-col space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className="text-3xl font-bold">{product.name}</CardTitle>
+              <CardTitle className="text-2xl md:text-3xl font-bold">{product.name}</CardTitle>
               {translatedCategory && (
                 <Badge variant="outline" className="mt-2 w-fit text-sm">
                   {translatedCategory}
@@ -84,14 +84,14 @@ export default async function ProductPage({ params }: { params: ProductPageParam
             </CardHeader>
             <CardContent>
               {product.rating && product.rating > 0 && (
-                <div className="mb-4">
-                  <StarRating rating={product.rating} size={24} />
-                  <span className="text-sm text-muted-foreground me-2">({product.comments?.length || 0} نظر)</span>
+                <div className="mb-4 flex items-center gap-2">
+                  <StarRating rating={product.rating} size={20} />
+                  <span className="text-sm text-muted-foreground">({product.comments?.length || 0} نظر)</span>
                 </div>
               )}
-              <p className="text-3xl font-semibold text-primary mb-4">{product.price} تومان</p>
+              <p className="text-2xl md:text-3xl font-semibold text-primary mb-4">{product.price} تومان</p>
               {product.description && (
-                <p className="text-foreground leading-relaxed">{product.description}</p>
+                <p className="text-foreground leading-relaxed text-sm sm:text-base">{product.description}</p>
               )}
             </CardContent>
             <CardFooter>
@@ -103,25 +103,25 @@ export default async function ProductPage({ params }: { params: ProductPageParam
 
       {/* Comments Section */}
       {product.comments && product.comments.length > 0 && (
-        <Card className="mt-12">
+        <Card className="mt-8 md:mt-12">
           <CardHeader>
-            <CardTitle>نظرات کاربران ({product.comments.length})</CardTitle>
+            <CardTitle className="text-xl md:text-2xl">نظرات کاربران ({product.comments.length})</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             {product.comments.map((comment: Comment) => (
               <div key={comment.id} className="pb-6 border-b last:border-b-0">
                 <div className="flex items-start space-x-3 rtl:space-x-reverse">
-                  <Avatar className="h-10 w-10">
+                  <Avatar className="h-8 w-8 sm:h-10 sm:w-10">
                     <AvatarImage src={comment.avatar} alt={comment.user} data-ai-hint={comment.avatarHint || "user avatar"}/>
                     <AvatarFallback>{comment.user.substring(0, 1)}</AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
-                    <div className="flex justify-between items-center">
-                      <p className="font-semibold text-foreground">{comment.user}</p>
-                      <span className="text-xs text-muted-foreground">{comment.date}</span>
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+                      <p className="font-semibold text-foreground text-sm sm:text-base">{comment.user}</p>
+                      <span className="text-xs text-muted-foreground mt-1 sm:mt-0">{comment.date}</span>
                     </div>
                     {comment.rating > 0 && <StarRating rating={comment.rating} size={16} className="mt-1 mb-2" />}
-                    <p className="text-sm text-foreground leading-normal">{comment.text}</p>
+                    <p className="text-xs sm:text-sm text-foreground leading-normal">{comment.text}</p>
                   </div>
                 </div>
               </div>
@@ -131,9 +131,9 @@ export default async function ProductPage({ params }: { params: ProductPageParam
       )}
 
       {/* Add Comment Section */}
-      <Card className="mt-12">
+      <Card className="mt-8 md:mt-12">
         <CardHeader>
-          <CardTitle>نظر خود را ثبت کنید</CardTitle>
+          <CardTitle className="text-xl md:text-2xl">نظر خود را ثبت کنید</CardTitle>
           <CardDescription>تجربه خود را در مورد این کالا با دیگران به اشتراک بگذارید.</CardDescription>
         </CardHeader>
         <CardContent>

@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState } from 'react';
@@ -50,27 +51,27 @@ export default function VendorDashboardClient() {
       <TabsContent value="listings">
         <Card>
           <CardHeader>
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
               <div>
                 <CardTitle>لیست کالاهای شما</CardTitle>
                 <CardDescription>کالاهای ثبت شده برای فروش را مدیریت کنید.</CardDescription>
               </div>
-              <Button asChild variant="default">
+              <Button asChild variant="default" className="w-full sm:w-auto">
                 <Link href="/vendor/submit-item"><PlusCircle className="ms-2 h-4 w-4" /> ثبت کالای جدید</Link>
               </Button>
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
             {items.length > 0 ? items.map(item => (
-              <div key={item.id} className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="flex items-center gap-4">
-                  <img src={item.image} alt={item.name} data-ai-hint={item.imageHint} className="w-16 h-16 rounded object-cover" />
+              <div key={item.id} className="flex flex-col gap-3 p-4 border rounded-lg sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <img src={item.image} alt={item.name} data-ai-hint={item.imageHint} className="w-12 h-12 sm:w-16 sm:h-16 rounded object-cover" />
                   <div>
-                    <p className="font-semibold">{item.name}</p>
-                    <p className="text-sm text-muted-foreground">{item.price} تومان</p>
+                    <p className="font-semibold text-sm sm:text-base">{item.name}</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">{item.price} تومان</p>
                   </div>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 self-end sm:self-center">
                   <Button variant="outline" size="icon" asChild>
                     <Link href={`/vendor/edit-item/${item.id}`}><Edit3 className="h-4 w-4" /></Link>
                   </Button>

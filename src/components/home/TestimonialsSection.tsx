@@ -1,3 +1,4 @@
+
 import TestimonialCard from '@/components/shared/TestimonialCard';
 import type { Testimonial } from '@/types';
 
@@ -31,11 +32,11 @@ const testimonials: Testimonial[] = [
 
 const TestimonialsSection = () => {
   return (
-    <section className="py-16 bg-secondary/50">
+    <section className="py-12 sm:py-16 bg-secondary/50">
       <div className="container mx-auto px-4">
-        <h2 className="text-2xl md:text-3xl font-bold text-center mb-12 text-foreground">نظرات مشتریان</h2>
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-8 sm:mb-12 text-foreground">نظرات مشتریان</h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {testimonials.map(testimonial => (
             <TestimonialCard key={testimonial.id} testimonial={testimonial} />
           ))}

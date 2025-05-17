@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
@@ -7,17 +8,17 @@ const HeroSection = () => {
   
   return (
     <section 
-      className="hero-section text-right py-16 md:py-32"
+      className="hero-section text-right py-12 sm:py-16 md:py-32"
       style={{
         backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), url('${heroBgImageUrl}')`,
       }}
       data-ai-hint="pets background"
     >
       <div className="container mx-auto px-4">
-        <div className="max-w-2xl">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-foreground">فروش انواع لوازم حیوانات خانگی</h1>
-          <p className="text-lg md:text-xl mb-8 text-muted-foreground">کیفیت برتر، قیمت مناسب، ارسال فوری</p>
-          <Button asChild size="lg" className="px-8 py-3 rounded-xl font-medium text-lg shadow-md">
+        <div className="max-w-xl md:max-w-2xl">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 text-foreground">فروش انواع لوازم حیوانات خانگی</h1>
+          <p className="text-base sm:text-lg md:text-xl mb-6 sm:mb-8 text-muted-foreground">کیفیت برتر، قیمت مناسب، ارسال فوری</p>
+          <Button asChild size="lg" className="px-6 py-2 sm:px-8 sm:py-3 rounded-xl font-medium text-base sm:text-lg shadow-md">
             <Link href="/products">خرید کنید</Link>
           </Button>
         </div>

@@ -48,6 +48,9 @@ export interface Article {
   imageHint?: string;
   summary: string;
   slug: string; // for linking to a full article page
+  content: string; // Full content of the article
+  category?: string; // Optional: e.g., 'dog', 'cat', 'health'
+  date?: string; // Optional: publishing date
 }
 
 export interface Testimonial {

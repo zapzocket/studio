@@ -2,17 +2,11 @@
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import ArticleSummaryCard from '@/components/shared/ArticleSummaryCard';
+import { mockArticles } from '@/lib/mock-data'; // Import mockArticles
 import type { Article } from '@/types';
 
-// Mock data for articles
-const latestArticle: Article = {
-  id: '1',
-  title: 'راهنمای تغذیه گربه: نکات مهم برای سلامت دوست پشمالوی شما',
-  image: 'https://placehold.co/600x400.png',
-  imageHint: 'cat eating food',
-  summary: 'تغذیه مناسب یکی از مهمترین عوامل در سلامت و طول عمر گربه‌هاست. در این مقاله به بررسی نیازهای غذایی گربه‌ها در سنین مختلف، انواع غذاهای تجاری و خانگی، مقدار مناسب غذا و زمان‌بندی وعده‌های غذایی می‌پردازیم. همچنین نکات مهم درباره غذاهای ممنوعه برای گربه‌ها را بررسی خواهیم کرد...',
-  slug: 'cat-feeding-guide',
-};
+// Use the first article from mockArticles as the latest article for the homepage
+const latestArticle: Article | undefined = mockArticles.length > 0 ? mockArticles[0] : undefined;
 
 const ArticlesSection = () => {
   return (
@@ -25,7 +19,11 @@ const ArticlesSection = () => {
           </Link>
         </div>
         
-        <ArticleSummaryCard article={latestArticle} />
+        {latestArticle ? (
+          <ArticleSummaryCard article={latestArticle} />
+        ) : (
+          <p className="text-center text-muted-foreground">مقاله‌ای برای نمایش وجود ندارد.</p>
+        )}
       </div>
     </section>
   );

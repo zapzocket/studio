@@ -67,7 +67,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
             onClick={toggleFavorite}
             aria-label={isFavorite ? "حذف از علاقه‌مندی‌ها" : "افزودن به علاقه‌مندی‌ها"}
           >
-            <Heart size={18} sm:size={20} fill={isFavorite ? 'hsl(var(--destructive))' : 'none'} className={isFavorite ? 'text-destructive' : ''} />
+            <Heart size={18} fill={isFavorite ? 'hsl(var(--destructive))' : 'none'} className={isFavorite ? 'text-destructive' : ''} />
           </Button>
         </div>
       </CardHeader>

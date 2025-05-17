@@ -10,6 +10,7 @@ import { AlertCircle, Store } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import CommentForm from '@/components/shared/CommentForm'; // Import the new form
+import { Badge } from "@/components/ui/badge";
 
 interface ProductPageParams {
   id: string;
@@ -19,6 +20,15 @@ interface ProductPageParams {
 async function getProductById(id: string): Promise<Product | undefined> {
   return detailedMockProducts.find(p => p.id === id);
 }
+
+const categoryTranslations: { [key: string]: string } = {
+  dog: 'سگ',
+  cat: 'گربه',
+  bird: 'پرندگان',
+  rodent: 'جوندگان',
+  fish: 'ماهی',
+  other: 'سایر',
+};
 
 export default async function ProductPage({ params }: { params: ProductPageParams }) {
   const product = await getProductById(params.id);
@@ -35,6 +45,8 @@ export default async function ProductPage({ params }: { params: ProductPageParam
       </div>
     );
   }
+
+  const translatedCategory = product.category ? categoryTranslations[product.category] : null;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -58,6 +70,11 @@ export default async function ProductPage({ params }: { params: ProductPageParam
           <Card>
             <CardHeader>
               <CardTitle className="text-3xl font-bold">{product.name}</CardTitle>
+              {translatedCategory && (
+                <Badge variant="outline" className="mt-2 w-fit text-sm">
+                  {translatedCategory}
+                </Badge>
+              )}
               {product.shop && (
                 <div className="flex items-center text-sm text-muted-foreground pt-2">
                   <Store size={16} className="ms-2" />

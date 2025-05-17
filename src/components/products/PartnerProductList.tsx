@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useMemo } from 'react';
@@ -8,12 +9,12 @@ import { Input } from '@/components/ui/input';
 
 // Mock data - in a real app, this would come from an API
 const mockPartnerProducts: Product[] = [
-  { id: 'p1', name: 'قلاده چرمی دست‌دوز سگ', image: 'https://placehold.co/300x200.png', imageHint: 'leather dog collar', price: '180,000', isFavorite: false },
-  { id: 'p2', name: 'خاک گربه آنتی‌باکتریال ۱۰ کیلویی', image: 'https://placehold.co/300x200.png', imageHint: 'cat litter bag', price: '250,000', isFavorite: true },
-  { id: 'p3', name: 'قفس بزرگ برای پرندگان زینتی', image: 'https://placehold.co/300x200.png', imageHint: 'bird cage', price: '750,000', isFavorite: false },
-  { id: 'p4', name: 'غذای مخصوص همستر پریمیوم', image: 'https://placehold.co/300x200.png', imageHint: 'hamster food', price: '95,000', isFavorite: false },
-  { id: 'p5', name: 'فیلتر داخلی آکواریوم قدرتمند', image: 'https://placehold.co/300x200.png', imageHint: 'aquarium filter', price: '320,000', isFavorite: true },
-  { id: 'p6', name: 'تشویقی دنتال سگ با طعم نعنا', image: 'https://placehold.co/300x200.png', imageHint: 'dog dental treat', price: '120,000', isFavorite: false },
+  { id: 'p1', name: 'قلاده چرمی دست‌دوز سگ', image: 'https://placehold.co/300x200.png', imageHint: 'leather dog collar', price: '180,000', category: 'dog', isFavorite: false },
+  { id: 'p2', name: 'خاک گربه آنتی‌باکتریال ۱۰ کیلویی', image: 'https://placehold.co/300x200.png', imageHint: 'cat litter bag', price: '250,000', category: 'cat', isFavorite: true },
+  { id: 'p3', name: 'قفس بزرگ برای پرندگان زینتی', image: 'https://placehold.co/300x200.png', imageHint: 'bird cage', price: '750,000', category: 'bird', isFavorite: false },
+  { id: 'p4', name: 'غذای مخصوص همستر پریمیوم', image: 'https://placehold.co/300x200.png', imageHint: 'hamster food', price: '95,000', category: 'rodent', isFavorite: false },
+  { id: 'p5', name: 'فیلتر داخلی آکواریوم قدرتمند', image: 'https://placehold.co/300x200.png', imageHint: 'aquarium filter', price: '320,000', category: 'fish', isFavorite: true },
+  { id: 'p6', name: 'تشویقی دنتال سگ با طعم نعنا', image: 'https://placehold.co/300x200.png', imageHint: 'dog dental treat', price: '120,000', category: 'dog', isFavorite: false },
 ];
 
 const categories = [
@@ -33,7 +34,7 @@ export default function PartnerProductList() {
   const filteredProducts = useMemo(() => {
     return products
       .filter(product => 
-        selectedCategory === 'all' || product.id.includes(selectedCategory.charAt(0)) // Simple mock category filter
+        selectedCategory === 'all' || product.category === selectedCategory
       )
       .filter(product => 
         product.name.toLowerCase().includes(searchTerm.toLowerCase())

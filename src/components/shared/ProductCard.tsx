@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState } from 'react';
@@ -7,13 +8,22 @@ import { Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import type { Product } from '@/types';
-import { useToast } from "@/hooks/use-toast"
-
+import { useToast } from "@/hooks/use-toast";
+import { Badge } from "@/components/ui/badge";
 
 interface ProductCardProps {
   product: Product;
   onAddToCart?: (product: Product) => void; // Optional: if cart logic is managed higher up
 }
+
+const categoryTranslations: { [key: string]: string } = {
+  dog: 'سگ',
+  cat: 'گربه',
+  bird: 'پرندگان',
+  rodent: 'جوندگان',
+  fish: 'ماهی',
+  other: 'سایر',
+};
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
   const [isFavorite, setIsFavorite] = useState(product.isFavorite || false);
@@ -36,6 +46,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
       description: product.name,
     });
   };
+
+  const translatedCategory = product.category ? categoryTranslations[product.category] : null;
 
   return (
     <Card className="product-card rounded-xl overflow-hidden shadow-sm border-border transition duration-300 flex flex-col h-full">
@@ -60,6 +72,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
         </div>
       </CardHeader>
       <CardContent className="p-4 flex-grow">
+        {translatedCategory && (
+          <Badge variant="outline" className="mb-2 text-xs">
+            {translatedCategory}
+          </Badge>
+        )}
         <CardTitle className="text-md font-bold mb-2 leading-tight">
           <Link href={`/products/${product.id}`} className="hover:text-primary">{product.name}</Link>
         </CardTitle>

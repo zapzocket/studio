@@ -10,10 +10,11 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import type { Product } from '@/types';
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
+import { useCart } from '@/context/CartContext'; // Import useCart
 
 interface ProductCardProps {
   product: Product;
-  onAddToCart?: (product: Product) => void; // Optional: if cart logic is managed higher up
+  // onAddToCart prop is no longer needed as we use context
 }
 
 const categoryTranslations: { [key: string]: string } = {
@@ -25,12 +26,14 @@ const categoryTranslations: { [key: string]: string } = {
   other: 'سایر',
 };
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [isFavorite, setIsFavorite] = useState(product.isFavorite || false);
   const { toast } = useToast();
+  const { addToCart } = useCart(); // Use cart context
 
   const toggleFavorite = () => {
     setIsFavorite(!isFavorite);
+    // In a real app, this would also update backend/localStorage
     toast({
       title: isFavorite ? "از علاقه‌مندی‌ها حذف شد" : "به علاقه‌مندی‌ها اضافه شد",
       description: product.name,
@@ -38,9 +41,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
   };
 
   const handleAddToCartClick = () => {
-    if (onAddToCart) {
-      onAddToCart(product);
-    }
+    addToCart(product); // Add product to cart via context
     toast({
       title: "محصول به سبد خرید اضافه شد",
       description: product.name,
@@ -63,7 +64,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
           <Button 
             variant="ghost" 
             size="icon" 
-            className="absolute top-2 start-2 sm:top-3 sm:start-3 text-muted-foreground hover:text-destructive bg-card/70 hover:bg-card p-1 h-8 w-8 sm:h-auto sm:w-auto"
+            className="absolute top-2 start-2 sm:top-3 sm:start-3 text-muted-foreground hover:text-destructive bg-card/70 hover:bg-card p-1 h-8 w-8"
             onClick={toggleFavorite}
             aria-label={isFavorite ? "حذف از علاقه‌مندی‌ها" : "افزودن به علاقه‌مندی‌ها"}
           >

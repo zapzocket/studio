@@ -18,21 +18,28 @@ export interface Comment {
   date: string;
 }
 
+// Product type as used in most places (e.g. ProductCard props)
 export interface Product {
   id: string;
   name: string;
   image: string;
   imageHint?: string;
-  price: string;
+  price: string; // Price is often a string like "120,000" in initial data
   description?: string;
   category?: string;
   rating?: number; // Overall product rating
   comments?: Comment[];
   shop?: Shop;
   isFavorite?: boolean;
-  // Add other relevant fields from existing mock data if needed for consistency
-  // For example, if category was used by ProductCard, ensure it's here.
 }
+
+// CartItem type - used specifically within the cart context and cart page.
+// Extends Product but ensures price is a number for calculations.
+export interface CartItem extends Omit<Product, 'price'> {
+  price: number; // Numeric price for calculations
+  quantity: number;
+}
+
 
 export interface Article {
   id: string;

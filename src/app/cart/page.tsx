@@ -7,46 +7,40 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Trash2, MinusCircle, PlusCircle } from 'lucide-react';
 import Link from 'next/link';
-import React, { useState } from 'react';
-
-interface CartItem {
-  id: string;
-  name: string;
-  image: string;
-  imageHint?: string;
-  price: number; // Use number for calculations
-  quantity: number;
-  category?: string;
-}
-
-const initialCartItems: CartItem[] = [
-  { id: '1', name: 'غذای خشک سگ پرمیوم رویال کنین', image: 'https://placehold.co/100x100.png', imageHint: 'dog food bag', price: 320000, quantity: 1, category: 'dog' },
-  { id: '2', name: 'اسباب بازی گربه با پر و زنگوله', image: 'https://placehold.co/100x100.png', imageHint: 'cat toy feather', price: 85000, quantity: 2, category: 'cat' },
-];
+import React from 'react';
+import { useCart, type CartItem } from '@/context/CartContext'; // Import useCart and CartItem
+import { useToast } from '@/hooks/use-toast';
 
 export default function CartPage() {
-  const [cartItems, setCartItems] = useState<CartItem[]>(initialCartItems);
+  const { cartItems, updateItemQuantity, removeFromCart, calculateTotal, clearCart } = useCart();
+  const { toast } = useToast();
 
   const handleQuantityChange = (itemId: string, newQuantity: number) => {
-    if (newQuantity < 1) return; // Prevent quantity from going below 1
-    setCartItems(items =>
-      items.map(item =>
-        item.id === itemId ? { ...item, quantity: newQuantity } : item
-      )
-    );
+    updateItemQuantity(itemId, newQuantity);
   };
 
   const handleRemoveItem = (itemId: string) => {
-    setCartItems(items => items.filter(item => item.id !== itemId));
-    // Add toast notification if desired
+    const itemToRemove = cartItems.find(item => item.id === itemId);
+    removeFromCart(itemId);
+    if (itemToRemove) {
+      toast({
+        title: "کالا از سبد حذف شد",
+        description: `${itemToRemove.name} از سبد خرید شما حذف شد.`,
+      });
+    }
   };
 
   const calculateSubtotal = (item: CartItem) => {
     return item.price * item.quantity;
   };
 
-  const calculateTotal = () => {
-    return cartItems.reduce((total, item) => total + calculateSubtotal(item), 0);
+  const handleCheckout = () => {
+    // In a real app, navigate to checkout page or process payment
+    toast({
+      title: "انتقال به صفحه پرداخت",
+      description: "سفارش شما در حال پردازش است...",
+    });
+    // clearCart(); // Optionally clear cart after checkout starts
   };
 
   return (
@@ -135,7 +129,7 @@ export default function CartPage() {
              <Button variant="outline" asChild>
                 <Link href="/products">ادامه خرید</Link>
               </Button>
-            <Button size="lg" className="w-full sm:w-auto">
+            <Button size="lg" className="w-full sm:w-auto" onClick={handleCheckout}>
               ادامه فرایند خرید و پرداخت
             </Button>
           </CardFooter>

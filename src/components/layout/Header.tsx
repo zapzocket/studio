@@ -16,19 +16,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
+import { useCart } from '@/context/CartContext'; // Import useCart
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [cartItemCount, setCartItemCount] = useState(0); // Placeholder for cart count
   const router = useRouter();
   const { toast } = useToast();
-
-  // Effect to load cart item count from local storage or an API in a real app
-  useEffect(() => {
-    // For demo, let's initialize with a value. In a real app, this might come from context/state management.
-    setCartItemCount(2);
-  }, []);
+  const { getCartItemCount } = useCart(); // Use cart context
+  
+  const cartItemCount = getCartItemCount(); // Get dynamic cart count
 
   const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -39,13 +36,6 @@ const Header = () => {
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
-  };
-
-  // This function would be passed to product cards to update cart count
-  // For now, it's just a placeholder to demonstrate capability
-  const handleAddToCart = () => {
-    setCartItemCount(prevCount => prevCount + 1);
-    // Could add animation logic here as in original script if desired
   };
 
   const handleSignOut = () => {

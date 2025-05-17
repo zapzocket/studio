@@ -1,7 +1,8 @@
 
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import ProductCard from '@/components/shared/ProductCard';
 import type { Product } from '@/types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -26,21 +27,45 @@ const categories = [
   { id: 'fish', name: 'ماهی' },
 ];
 
+const validCategoryIds = categories.map(c => c.id).filter(id => id !== 'all');
+
 export default function PartnerProductList() {
+  const searchParams = useSearchParams();
+  const initialCategory = searchParams.get('category');
+
   const [products, setProducts] = useState<Product[]>(mockPartnerProducts);
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState(() => {
+    if (initialCategory && validCategoryIds.includes(initialCategory)) {
+      return initialCategory;
+    }
+    return 'all';
+  });
   const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    const categoryFromUrl = searchParams.get('category');
+    if (categoryFromUrl && validCategoryIds.includes(categoryFromUrl)) {
+      setSelectedCategory(categoryFromUrl);
+    } else if (!categoryFromUrl) {
+      // If the category param is removed or not present, default to 'all'
+      // This handles cases where user might clear filters or navigate directly
+      setSelectedCategory('all');
+    }
+    // Only re-run if searchParams.get('category') changes.
+    // Note: useSearchParams() itself is stable, its .get() method provides the changing value.
+  }, [searchParams]);
+
 
   const filteredProducts = useMemo(() => {
     return products
-      .filter(product => 
+      .filter(product =>
         selectedCategory === 'all' || product.category === selectedCategory
       )
-      .filter(product => 
+      .filter(product =>
         product.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
   }, [products, selectedCategory, searchTerm]);
-  
+
   const handleAddToCart = (product: Product) => {
     console.log("Added to cart from partner list:", product.name);
     // ProductCard shows its own toast
@@ -49,7 +74,7 @@ export default function PartnerProductList() {
   return (
     <div>
       <div className="mb-8 flex flex-col md:flex-row gap-4 items-center">
-        <Input 
+        <Input
           type="text"
           placeholder="جستجو در محصولات..."
           className="md:flex-grow"

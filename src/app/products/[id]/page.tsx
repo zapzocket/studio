@@ -1,5 +1,4 @@
 
-import { detailedMockProducts } from '@/lib/mock-data';
 import type { Product, Comment } from '@/types';
 import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
@@ -7,8 +6,10 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import StarRating from '@/components/shared/StarRating';
 import { Separator } from '@/components/ui/separator';
 import { AlertCircle, Store } from 'lucide-react';
+// Button import might be removed if AddToCartButton is the only one
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import AddToCartButton from '@/components/products/AddToCartButton'; // Import the new client component
 import CommentForm from '@/components/shared/CommentForm'; // Import the new form
 import { Badge } from "@/components/ui/badge";
 
@@ -16,9 +17,38 @@ interface ProductPageParams {
   id: string;
 }
 
-// Helper function to get product (simulates API call)
+// Helper function to get product
 async function getProductById(id: string): Promise<Product | undefined> {
-  return detailedMockProducts.find(p => p.id === id);
+  try {
+    const response = await fetch(`http://127.0.0.1:5000/api/products/${id}`, { cache: 'no-store' }); // Use absolute URL for server-side fetch, disable cache
+    if (!response.ok) {
+      if (response.status === 404) {
+        return undefined;
+      }
+      throw new Error(`Failed to fetch product: ${response.statusText}`);
+    }
+    const p = await response.json();
+    // Map backend data to frontend Product type
+    return {
+      id: String(p.product_id),
+      name: p.itemName,
+      price: String(p.price), // Ensure price is string
+      category: p.category,
+      description: p.description,
+      // These fields are not in the backend model, so provide defaults or leave undefined
+      image: `https://placehold.co/600x400.png?text=${encodeURIComponent(p.itemName)}`, // Placeholder image
+      imageHint: p.itemName,
+      isFavorite: false, // Default value
+      // Mocked or default values for fields not yet in backend model
+      shop: { id: 's1', name: 'فروشگاه پیش فرض' }, // Mock shop
+      rating: 0, // Default
+      comments: [], // Default
+    };
+  } catch (error) {
+    console.error("Error fetching product by ID:", error);
+    // In a real app, you might want to throw the error to be caught by Next.js error handling
+    return undefined;
+  }
 }
 
 const categoryTranslations: { [key: string]: string } = {
@@ -75,6 +105,7 @@ export default async function ProductPage({ params }: { params: ProductPageParam
                   {translatedCategory}
                 </Badge>
               )}
+              {/* Shop data is currently mocked in getProductById, update if backend provides it */}
               {product.shop && (
                 <div className="flex items-center text-sm text-muted-foreground pt-2">
                   <Store size={16} className="ms-2" />
@@ -83,6 +114,7 @@ export default async function ProductPage({ params }: { params: ProductPageParam
               )}
             </CardHeader>
             <CardContent>
+              {/* Rating and comments are currently mocked in getProductById, update if backend provides them */}
               {product.rating && product.rating > 0 && (
                 <div className="mb-4 flex items-center gap-2">
                   <StarRating rating={product.rating} size={20} />
@@ -95,13 +127,13 @@ export default async function ProductPage({ params }: { params: ProductPageParam
               )}
             </CardContent>
             <CardFooter>
-              <Button size="lg" className="w-full">افزودن به سبد خرید</Button>
+              <AddToCartButton product={product} />
             </CardFooter>
           </Card>
         </div>
       </div>
 
-      {/* Comments Section */}
+      {/* Comments Section - Stays as is with mock data for now */}
       {product.comments && product.comments.length > 0 && (
         <Card className="mt-8 md:mt-12">
           <CardHeader>

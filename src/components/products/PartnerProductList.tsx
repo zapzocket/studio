@@ -8,15 +8,9 @@ import type { Product } from '@/types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 
-// Mock data - in a real app, this would come from an API
-const mockPartnerProducts: Product[] = [
-  { id: 'p1', name: 'قلاده چرمی دست‌دوز سگ', image: 'https://placehold.co/300x200.png', imageHint: 'leather dog collar', price: '180,000', category: 'dog', isFavorite: false },
-  { id: 'p2', name: 'خاک گربه آنتی‌باکتریال ۱۰ کیلویی', image: 'https://placehold.co/300x200.png', imageHint: 'cat litter bag', price: '250,000', category: 'cat', isFavorite: true },
-  { id: 'p3', name: 'قفس بزرگ برای پرندگان زینتی', image: 'https://placehold.co/300x200.png', imageHint: 'bird cage', price: '750,000', category: 'bird', isFavorite: false },
-  { id: 'p4', name: 'غذای مخصوص همستر پریمیوم', image: 'https://placehold.co/300x200.png', imageHint: 'hamster food', price: '95,000', category: 'rodent', isFavorite: false },
-  { id: 'p5', name: 'فیلتر داخلی آکواریوم قدرتمند', image: 'https://placehold.co/300x200.png', imageHint: 'aquarium filter', price: '320,000', category: 'fish', isFavorite: true },
-  { id: 'p6', name: 'تشویقی دنتال سگ با طعم نعنا', image: 'https://placehold.co/300x200.png', imageHint: 'dog dental treat', price: '120,000', category: 'dog', isFavorite: false },
-];
+import { toast } from '@/hooks/use-toast'; // For error notifications
+
+// Mock data removed
 
 const categories = [
   { id: 'all', name: 'همه دسته‌بندی‌ها' },
@@ -33,7 +27,10 @@ export default function PartnerProductList() {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get('category');
 
-  const [products, setProducts] = useState<Product[]>(mockPartnerProducts);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   const [selectedCategory, setSelectedCategory] = useState(() => {
     if (initialCategory && validCategoryIds.includes(initialCategory)) {
       return initialCategory;
@@ -47,14 +44,47 @@ export default function PartnerProductList() {
     if (categoryFromUrl && validCategoryIds.includes(categoryFromUrl)) {
       setSelectedCategory(categoryFromUrl);
     } else if (!categoryFromUrl) {
-      // If the category param is removed or not present, default to 'all'
-      // This handles cases where user might clear filters or navigate directly
       setSelectedCategory('all');
     }
-    // Only re-run if searchParams.get('category') changes.
-    // Note: useSearchParams() itself is stable, its .get() method provides the changing value.
   }, [searchParams]);
 
+  useEffect(() => {
+    async function fetchProducts() {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const response = await fetch('/api/products');
+        if (!response.ok) {
+          throw new Error('Failed to fetch products');
+        }
+        const data = await response.json();
+        // Map backend data to frontend Product type
+        const mappedProducts: Product[] = data.map((p: any) => ({
+          id: String(p.product_id), // Ensure id is string
+          name: p.itemName,
+          price: String(p.price), // Ensure price is string
+          category: p.category,
+          description: p.description,
+          // These fields are not in the backend model, so provide defaults or leave undefined
+          image: `https://placehold.co/300x200.png?text=${encodeURIComponent(p.itemName)}`, // Placeholder image
+          imageHint: p.itemName,
+          isFavorite: false, // Default value
+        }));
+        setProducts(mappedProducts);
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : "An unknown error occurred";
+        setError(errorMessage);
+        toast({
+          title: "خطا در بارگذاری محصولات",
+          description: errorMessage,
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchProducts();
+  }, []); // Empty dependency array to run once on mount
 
   const filteredProducts = useMemo(() => {
     return products
@@ -67,9 +97,19 @@ export default function PartnerProductList() {
   }, [products, selectedCategory, searchTerm]);
 
   const handleAddToCart = (product: Product) => {
-    console.log("Added to cart from partner list:", product.name);
-    // ProductCard shows its own toast
+    // This will be handled by ProductCard itself or a global cart context later
+    console.log("Triggered add to cart from partner list for:", product.name);
+    // For now, ProductCard might show its own toast.
+    // If cart context is implemented, dispatch an action here.
   };
+
+  if (isLoading) {
+    return <div className="text-center py-10">در حال بارگذاری محصولات...</div>;
+  }
+
+  if (error) {
+    return <div className="text-center py-10 text-red-600">خطا در بارگذاری محصولات: {error}</div>;
+  }
 
   return (
     <div>
@@ -96,7 +136,7 @@ export default function PartnerProductList() {
       {filteredProducts.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {filteredProducts.map(product => (
-            <ProductCard key={product.id} product={product} onAddToCart={handleAddToCart}/>
+            <ProductCard key={product.id} product={product} onAddToCart={handleAddToCart} />
           ))}
         </div>
       ) : (

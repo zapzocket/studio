@@ -50,13 +50,38 @@ export default function ItemSubmissionForm() {
   });
 
   async function onSubmit(values: ItemSubmissionFormValues) {
-    // In a real app, you'd send this to your backend, including image data
-    console.log(values);
-    toast({
-      title: "کالا با موفقیت ثبت شد!",
-      description: `کالای "${values.itemName}" برای فروش قرار گرفت.`,
-    });
-    form.reset();
+    // image field is not part of `values` from the form schema for now
+    try {
+      const response = await fetch('/api/products', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values), // Send all form values
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        toast({
+          title: "کالا با موفقیت ثبت شد!",
+          description: `کالای "${values.itemName}" (ID: ${result.product_id}) برای فروش قرار گرفت.`,
+        });
+        form.reset();
+      } else {
+        const errorResult = await response.json();
+        toast({
+          title: "خطا در ثبت کالا",
+          description: errorResult.error || errorResult.details || "لطفا دوباره تلاش کنید.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "خطای شبکه",
+        description: "امکان برقراری ارتباط با سرور وجود ندارد.",
+        variant: "destructive",
+      });
+    }
   }
 
   return (

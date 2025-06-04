@@ -49,13 +49,40 @@ export default function VendorSignupForm() {
   });
 
   async function onSubmit(values: VendorSignupFormValues) {
-    // In a real app, you'd send this to your backend
-    console.log(values);
-    toast({
-      title: "ثبت نام موفقیت آمیز بود!",
-      description: `فروشگاه ${values.shopName} خوش آمدید. اطلاعات شما برای بررسی ارسال شد.`,
-    });
-    form.reset();
+    // Destructure to remove confirmPassword before sending to backend
+    const { confirmPassword, ...submissionValues } = values;
+
+    try {
+      const response = await fetch('/api/auth/vendor-signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(submissionValues),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        toast({
+          title: "ثبت نام موفقیت آمیز بود!",
+          description: `فروشگاه ${submissionValues.shopName} خوش آمدید. ID: ${result.vendor_id}`,
+        });
+        form.reset();
+      } else {
+        const errorResult = await response.json();
+        toast({
+          title: "خطا در ثبت نام",
+          description: errorResult.error || errorResult.details || "لطفا دوباره تلاش کنید.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "خطای شبکه",
+        description: "امکان برقراری ارتباط با سرور وجود ندارد.",
+        variant: "destructive",
+      });
+    }
   }
 
   return (

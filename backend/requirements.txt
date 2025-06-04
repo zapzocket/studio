@@ -1,0 +1,4 @@
+Flask>=2.0
+Pydantic>=1.8
+SQLAlchemy~=2.0
+mysql-connector-python>=8.0

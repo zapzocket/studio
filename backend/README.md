@@ -2,6 +2,33 @@
 
 This document provides details for all the available API endpoints for the HeyvanKala backend application.
 
+## Database Setup (MySQL)
+
+This backend now uses MySQL as its database via SQLAlchemy. Before running, ensure you have:
+
+1.  A MySQL server instance running.
+2.  Connection details (host, port, user, password, database name) configured via the following environment variables:
+    *   `DB_HOST` (defaults to `localhost`)
+    *   `DB_PORT` (defaults to `3306`)
+    *   `DB_USER` (defaults to `petshop_user`)
+    *   `DB_PASSWORD` (defaults to `petshop_password`)
+    *   `DB_NAME` (defaults to `petshop_db`)
+3.  The database specified by `DB_NAME` must be created on your MySQL server.
+4.  The user specified by `DB_USER` must have permissions to connect to the database and perform CRUD operations, as well as create/drop tables.
+5.  Once the environment variables are set and the database exists, run the following command from the project root (with your virtual environment active if you use one for the backend) to create the necessary tables:
+    ```bash
+    flask --app backend/app.py init-db
+    ```
+
+## Dependencies
+
+Key Python dependencies for this backend (managed in `requirements.txt`) include:
+*   Flask
+*   Pydantic (for request validation)
+*   SQLAlchemy (for database ORM)
+*   mysql-connector-python (MySQL driver for SQLAlchemy)
+*   Werkzeug (for password hashing, a Flask dependency)
+
 General Notes:
 *   All request and response bodies are in JSON format.
 *   The base URL for these endpoints is assumed to be `/api`.
@@ -15,7 +42,7 @@ General Notes:
 
 ### `POST /api/auth/vendor-signup`
 
-*   **Description**: Registers a new vendor in the system.
+*   **Description**: Registers a new vendor in the system. Passwords are automatically hashed before storage.
 *   **Request Body**:
     ```json
     {
@@ -51,6 +78,12 @@ General Notes:
         ```json
         {
           "error": "No data provided"
+        }
+        ```
+    *   `409 Conflict` (e.g., if email already exists):
+        ```json
+        {
+            "error": "This email is already registered."
         }
         ```
     *   `500 Internal Server Error`:
@@ -117,14 +150,14 @@ General Notes:
     ```json
     [
       {
-        "product_id": 1,
+        "id": 1,
         "itemName": "Premium Dog Food",
         "description": "High-quality dry food for adult dogs.",
         "price": 25.99,
         "category": "dog"
       },
       {
-        "product_id": 2,
+        "id": 2,
         "itemName": "Interactive Cat Toy",
         "description": "Feather wand to engage your cat.",
         "price": 9.50,
@@ -132,7 +165,7 @@ General Notes:
       }
     ]
     ```
-    (Returns an empty list `[]` if no products are available.)
+    (Returns an empty list `[]` if no products are available. Note: `id` is used here for consistency with DB model, previously was `product_id` in some examples).
 *   **Error Responses**:
     *   `500 Internal Server Error`:
         ```json
@@ -152,13 +185,14 @@ General Notes:
 *   **Success Response (200 OK)**:
     ```json
     {
-      "product_id": 1,
+      "id": 1,
       "itemName": "Premium Dog Food",
       "description": "High-quality dry food for adult dogs.",
       "price": 25.99,
       "category": "dog"
     }
     ```
+     (Note: `id` is used here for consistency with DB model).
 *   **Error Responses**:
     *   `404 Not Found`:
         ```json
@@ -195,6 +229,7 @@ General Notes:
       "message": "Item added/updated in cart",
       "cart": [ // The updated list of all items in the cart
         {
+          "id": 1, // CartItem ID
           "product_id": 1,
           "itemName": "Premium Dog Food",
           "price": 25.99,
@@ -241,12 +276,14 @@ General Notes:
     ```json
     [
       {
+        "id": 1, // CartItem ID
         "product_id": 1,
         "itemName": "Premium Dog Food",
         "price": 25.99,
         "quantity": 2
       },
       {
+        "id": 2, // CartItem ID
         "product_id": 2,
         "itemName": "Interactive Cat Toy",
         "price": 9.50,
@@ -275,13 +312,14 @@ General Notes:
     }
     ```
 *   **URL Parameters**:
-    *   `product_id` (integer): The ID of the product in the cart to update.
+    *   `product_id` (integer): The ID of the product (not CartItem ID) in the cart to update.
 *   **Success Response (200 OK)**:
     ```json
     {
       "message": "Item 1 quantity updated/removed", // Message might vary
       "cart": [ // The updated list of all items in the cart
         {
+          "id": 2, // CartItem ID
           "product_id": 2,
           "itemName": "Interactive Cat Toy",
           "price": 9.50,
@@ -322,7 +360,7 @@ General Notes:
 
 ### `DELETE /api/cart/items/<product_id>`
 
-*   **Description**: Removes a specific item from the shopping cart.
+*   **Description**: Removes a specific item from the shopping cart, identified by its product ID.
 *   **Request Body**: None.
 *   **URL Parameters**:
     *   `product_id` (integer): The ID of the product to remove from the cart.
@@ -332,6 +370,7 @@ General Notes:
       "message": "Item 1 removed from cart",
       "cart": [ // The updated list of all items in the cart
         {
+          "id": 2, // CartItem ID
           "product_id": 2,
           "itemName": "Interactive Cat Toy",
           "price": 9.50,
@@ -391,7 +430,7 @@ General Notes:
     ```json
     [ // List of matching products. Same format as GET /api/products
       {
-        "product_id": 1,
+        "id": 1,
         "itemName": "Premium Dog Food",
         "description": "High-quality dry food for adult dogs, contains chicken.",
         "price": 25.99,
@@ -399,7 +438,7 @@ General Notes:
       }
     ]
     ```
-    (Returns an empty list `[]` if no products match the query.)
+    (Returns an empty list `[]` if no products match the query. Note: `id` is used here for consistency with DB model).
 *   **Error Responses**:
     *   `400 Bad Request` (If `q` parameter is missing):
         ```json
